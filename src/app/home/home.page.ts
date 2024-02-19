@@ -72,16 +72,24 @@ export class HomePage {
           },
           {
             text: 'Speichern',
-            handler: (data: any) => {
+            handler: async (data: any) => {
               try {
                 const dataArray = Object.values(data);
   
                 // Überprüfung, ob alle Eingabefelder ausgefüllt sind
                 if (dataArray.every(value => typeof value === 'string' && value.trim() !== '')) {
-                  this.items.push(dataArray);
-                  this.Toast1();
+                  const preis = parseFloat(dataArray[1] as string); // Konvertiere den Preis zu einer Zahl
+                  if (!isNaN(preis) && preis < 0.01) {
+                    this.Toast3();
+                    return; // Füge einen Wert zurück, um den Handler zu beenden
+                  } else {
+                    this.items.push(dataArray);
+                    this.Toast1();
+                    return; // Füge einen Wert zurück, um den Handler zu beenden
+                  }
                 } else {
                   this.Toast2();
+                  return; // Füge einen Wert zurück, um den Handler zu beenden
                 }
               } catch (error) {
                 console.error('Fehler beim Verarbeiten der Eingabe:', error);
@@ -96,6 +104,7 @@ export class HomePage {
       console.error('Fehler beim Erstellen des Alerts:', error);
     }
   }
+  
   
   
   SaveList() {
@@ -120,6 +129,13 @@ export class HomePage {
     async Toast2() {
       const toast = await this.toastController.create({
         message: 'Error:Bitte Daten eingeben',
+        duration: 2000,
+      });
+      toast.present();
+    }
+    async Toast3() {
+      const toast = await this.toastController.create({
+        message: 'Error:Preis negativ oder 0 Preis',
         duration: 2000,
       });
       toast.present();
