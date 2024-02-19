@@ -30,6 +30,7 @@ export class HomePage {
   }
   async SaveItems() {
     try {
+      const currentDate = new Date();
       const alert = await this.alertController.create({
         header: 'Element hinzufügen',
         inputs: [
@@ -79,8 +80,13 @@ export class HomePage {
                 // Überprüfung, ob alle Eingabefelder ausgefüllt sind
                 if (dataArray.every(value => typeof value === 'string' && value.trim() !== '')) {
                   const preis = parseFloat(dataArray[1] as string); // Konvertiere den Preis zu einer Zahl
+                  const inputDate = new Date(dataArray[0] as string); // Konvertiere das eingegebene Datum zu einem Date-Objekt
+  
                   if (!isNaN(preis) && preis < 0.01) {
                     this.Toast3();
+                    return; // Füge einen Wert zurück, um den Handler zu beenden
+                  } else if (inputDate > currentDate) {
+                    this.Toast4();
                     return; // Füge einen Wert zurück, um den Handler zu beenden
                   } else {
                     this.items.push(dataArray);
@@ -89,6 +95,10 @@ export class HomePage {
                   }
                 } else {
                   this.Toast2();
+                  const subTitleElement = alert.querySelector('.alert-sub-title');
+                  if (subTitleElement) {
+                    subTitleElement.textContent = 'Fehler: Bitte Daten eingeben';
+                  }
                   return; // Füge einen Wert zurück, um den Handler zu beenden
                 }
               } catch (error) {
@@ -100,12 +110,17 @@ export class HomePage {
       });
   
       await alert.present();
+  
+      const { role, data } = await alert.onDidDismiss();
+  
+      if (role === 'backdrop' || role === 'cancel') {
+        console.log('Abgebrochen');
+        return;
+      }
     } catch (error) {
       console.error('Fehler beim Erstellen des Alerts:', error);
     }
   }
-  
-  
   
   SaveList() {
     localStorage.setItem("items", JSON.stringify(this.items));
@@ -136,6 +151,13 @@ export class HomePage {
     async Toast3() {
       const toast = await this.toastController.create({
         message: 'Error:Preis negativ oder 0 Preis',
+        duration: 2000,
+      });
+      toast.present();
+    }
+    async Toast4() {
+      const toast = await this.toastController.create({
+        message: 'Error:Dieses Datum liegt in der Zukunft',
         duration: 2000,
       });
       toast.present();
@@ -176,5 +198,35 @@ export class HomePage {
         duration: 2000,
       });
       toast.present();
+
+      const alert = await this.alertController.create({
+        header: 'Löschen bestätigen',
+        message: 'Bist du sicher, dass du das Beispiel löschen möchtest?',
+        buttons: [
+          {
+            text: 'Abbrechen',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              console.log('Löschen abgebrochen');
+            }
+          },
+          {
+            text: 'Löschen',
+            cssClass: 'delete-button',
+            handler: () => {
+              if (document) {
+                const exampleElement = document.getElementById("Example");
+
+                if (exampleElement) {
+                  exampleElement.remove();
+                }
+              }
+            }
+          }
+        ]
+      });
+    
+      await alert.present();
     }
 }
