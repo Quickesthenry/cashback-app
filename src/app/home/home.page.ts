@@ -130,4 +130,11 @@ export class HomePage {
         this.items.splice(index, 1); // Lösche das Element anhand des Index
       }
     }
+    async TestToast0() {
+      const toast = await this.toastController.create({
+        message: 'Dies Ist ein Delete Button, mit ihm kannst du Zeug löschen!',
+        duration: 2000,
+      });
+      toast.present();
+    }
 }
