@@ -13,13 +13,20 @@
   
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">
-        Inbox
-      </ion-title>
+      
     </ion-toolbar>
   </ion-header>
   
   <ion-list>
-    <app-message *ngFor="let message of getMessages()" [message]="message"></app-message>
+    <ion-item *ngFor="let item of items">
+      <ion-label>Datum(): {{ item[0] }} </ion-label><br>
+      <ion-label>Preis(€): {{ item[1] }} </ion-label><br>
+      <ion-label>Supermarkt: {{ item[2] }} </ion-label><br>
+      <ion-label>Geldempfänger: {{ item[3] }} </ion-label><br>
+      <ion-label>Produkt: {{ item[4] }} </ion-label>
+    </ion-item>
   </ion-list>
+  <ion-fab-button class="addButton">
+    <ion-icon (click)="SaveItems()" name="add"></ion-icon>
+  </ion-fab-button>
 </ion-content>
