@@ -1,0 +1,8 @@
+{
+  "name": "Cashback-App",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular",
+  "id": "5d78652c"
+}
