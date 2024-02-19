@@ -31,7 +31,7 @@ export class HomePage {
   async SaveItems() {
     try {
       const alert = await this.alertController.create({
-        header: 'Eingabe',
+        header: 'Element hinzufügen',
         inputs: [
           {
             name: 'datum',
