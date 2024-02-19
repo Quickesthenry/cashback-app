@@ -29,67 +29,74 @@ export class HomePage {
 
   }
   async SaveItems() {
-    const alert = await this.alertController.create({
-      header: 'Eingabe',
-      inputs: [
-        {
-          name: 'datum',
-          type: 'date',
-          placeholder: 'Datum',
-        },
-        {
-          name: 'preis',
-          type: 'number',
-          placeholder: 'Preis(€)',
-        },
-        {
-          name: 'supermarkt',
-          type: 'text',
-          placeholder: 'Supermarkt',
-        },
-        {
-          name: 'geldempfaenger',
-          type: 'text',
-          placeholder: 'Geldempfänger',
-        },
-        {
-          name: 'produkt',
-          type: 'text',
-          placeholder: 'Produkt',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Abbrechen',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Abgebrochen');
-            alert.dismiss(); // Schließt das Alert-Fenster
-            return false;
+    try {
+      const alert = await this.alertController.create({
+        header: 'Eingabe',
+        inputs: [
+          {
+            name: 'datum',
+            type: 'date',
+            placeholder: 'Datum',
           },
-        },
-        {
-          text: 'Speichern',
-          handler: (data: any) => {
-            const dataArray = Object.values(data);
-  
-            // Überprüfung, ob alle Eingabefelder ausgefüllt sind
-            if (dataArray.every(value => typeof value === 'string' && value.trim() !== '')) {
-              this.items.push(dataArray);
-              this.Toast1()
-              
-            } else {
-              this.Toast2()
-            }
-
+          {
+            name: 'preis',
+            type: 'number',
+            placeholder: 'Preis(€)',
           },
-        },
-      ],
-    });
+          {
+            name: 'supermarkt',
+            type: 'text',
+            placeholder: 'Supermarkt',
+          },
+          {
+            name: 'geldempfaenger',
+            type: 'text',
+            placeholder: 'Geldempfänger',
+          },
+          {
+            name: 'produkt',
+            type: 'text',
+            placeholder: 'Produkt',
+          },
+        ],
+        buttons: [
+          {
+            text: 'Abbrechen',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              console.log('Abgebrochen');
+              alert.dismiss(); // Schließt das Alert-Fenster
+              return false;
+            },
+          },
+          {
+            text: 'Speichern',
+            handler: (data: any) => {
+              try {
+                const dataArray = Object.values(data);
   
-    await alert.present();
+                // Überprüfung, ob alle Eingabefelder ausgefüllt sind
+                if (dataArray.every(value => typeof value === 'string' && value.trim() !== '')) {
+                  this.items.push(dataArray);
+                  this.Toast1();
+                } else {
+                  this.Toast2();
+                }
+              } catch (error) {
+                console.error('Fehler beim Verarbeiten der Eingabe:', error);
+              }
+            },
+          },
+        ],
+      });
+  
+      await alert.present();
+    } catch (error) {
+      console.error('Fehler beim Erstellen des Alerts:', error);
     }
+  }
+  
   
   SaveList() {
     localStorage.setItem("items", JSON.stringify(this.items));
@@ -117,5 +124,10 @@ export class HomePage {
       });
       toast.present();
     }
+    deleteItem(index: number): void {
+      // Überprüfe, ob der Index gültig ist
+      if (index >= 0 && index < this.items.length) {
+        this.items.splice(index, 1); // Lösche das Element anhand des Index
+      }
+    }
 }
-
