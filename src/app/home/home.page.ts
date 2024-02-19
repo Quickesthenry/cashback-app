@@ -124,12 +124,36 @@ export class HomePage {
       });
       toast.present();
     }
-    deleteItem(index: number): void {
+    async deleteItem(index: number): Promise<void> {
       // Überprüfe, ob der Index gültig ist
       if (index >= 0 && index < this.items.length) {
-        this.items.splice(index, 1); // Lösche das Element anhand des Index
+        const alert = await this.alertController.create({
+          header: 'Löschen bestätigen',
+          message: 'Bist du sicher, dass du das Element löschen möchtest?',
+          buttons: [
+            {
+              text: 'Abbrechen',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: () => {
+                return false;
+              }
+            },
+            {
+              text: 'Löschen',
+              cssClass: 'delete-button',
+              handler: () => {
+                this.items.splice(index, 1); // Lösche das Element anhand des Index
+                alert.dismiss()
+                return false;
+              }
+            }
+          ]
+        });
+    
+        await alert.present();
       }
-    }
+    }    
     async TestToast0() {
       const toast = await this.toastController.create({
         message: 'Dies Ist ein Delete Button, mit ihm kannst du Zeug löschen!',
