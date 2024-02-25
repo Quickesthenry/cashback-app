@@ -90,6 +90,7 @@ export class HomePage {
                     return; // Füge einen Wert zurück, um den Handler zu beenden
                   } else {
                     this.items.push(dataArray);
+                    this.SaveList()
                     this.Toast1();
                     return; // Füge einen Wert zurück, um den Handler zu beenden
                   }
